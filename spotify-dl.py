@@ -56,6 +56,14 @@ def parse_arguments() -> argparse.Namespace:
               Record the IDs of all downloaded videos in it.")
 
     parser.add_argument(
+        "--cookies",
+        action="store",
+        metavar="FILE",
+        type=str,
+        help="Path to a cookies.txt file exported from your browser (used by yt-dlp)."
+    )
+
+    parser.add_argument(
         "--version",
         action="version",
         version=f"{__version__}",
@@ -77,7 +85,8 @@ if __name__ == "__main__":
     try:
         main(args.playlist_url, args.output_dir,
              args.audio_format, args.title_first,
-             args.max_concurrent, args.download_archive)
+             args.max_concurrent, args.download_archive,
+             args.cookies)
 
         print("Download completed.")
         sys.exit(0)

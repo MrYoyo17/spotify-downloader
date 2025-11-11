@@ -168,7 +168,8 @@ def get_song_urls(playlist_info: list[PlaylistInfo],
 
 def download_from_urls(urls: list[str], output_dir: str,
                        audio_format: str, title_first: bool,
-                       download_archive: str | None) -> None:
+                       download_archive: str | None,
+                       cookiefile: str | None = None) -> None:
     """Downloads list of songs with yt-dlp"""
 
     if not output_dir.endswith("/"):
@@ -215,6 +216,10 @@ def download_from_urls(urls: list[str], output_dir: str,
     if download_archive:
         options["download_archive"] = f"{output_dir}{download_archive}"
 
+    # allow passing cookies file to yt-dlp
+    if cookiefile:
+        options["cookiefile"] = cookiefile
+
     # downloads stream with highest bitrate
     with YoutubeDL(options) as ydl:
         ydl.download(urls)
@@ -224,8 +229,9 @@ def main(playlist_id: str,
          output_dir: str,
          audio_format: str,
          title_first: bool,
-         concurrent_limit: int,
-         download_archive: str | None) -> None:
+        concurrent_limit: int,
+        download_archive: str | None,
+        cookiefile: str | None = None) -> None:
     playlist_info = get_playlist_info(playlist_id)
 
     if not playlist_info:
@@ -234,7 +240,7 @@ def main(playlist_id: str,
 
     download_urls = get_song_urls(playlist_info, concurrent_limit)
     download_from_urls(download_urls, output_dir, audio_format,
-                       title_first, download_archive)
+                       title_first, download_archive, cookiefile)
 
 
 if __name__ == "__main__":
